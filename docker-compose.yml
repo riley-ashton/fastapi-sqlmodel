@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+
+  web:
+    build: ./backend
+    ports:
+      - "8004:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/foo
+    depends_on:
+      db:
+        condition: service_healthy
+    secrets:
+      - SECRET_KEY
+
+  db-admin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=postgres@test.com
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+    ports:
+      - "8005:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15.2-bullseye
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=foo
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+secrets:
+  SECRET_KEY:
+    file: ./backend/SECRET_KEY
