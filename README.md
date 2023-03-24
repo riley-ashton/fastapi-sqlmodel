@@ -4,7 +4,7 @@ Sample FastAPI project that uses async SQLAlchemy, SQLModel, React,
 Postgres, Alembic, and Docker.
 
 There is two development modes:
-full-fledged docker (postgres) or simple (with sqlite).
+full-fledged docker (postgres) or simple (with sqlite and no docker).
 
 ## Install
 
@@ -167,6 +167,26 @@ poetry update
 ```
 
 Note: poetry does not work in a folder with `__init__.py`
+
+### Task Queue
+
+FastApi's background tasks are used for backgrounds tasks.
+
+Future options are
+
+- ray serve (for CPU/GPU bound tasks; good for ML applications)
+- celery + flower
+- arq
+
+```python
+from fastapi.concurrency import run_in_threadpool
+res = await run_in_threadpool(cpu_bound_task, contents)
+```
+
+https://stackoverflow.com/questions/71516140/
+
+https://www.anyscale.com/blog/serving-pytorch-models-with-fastapi-and-ray-serve
+
 
 ### Secrets in files, not environment variables
 

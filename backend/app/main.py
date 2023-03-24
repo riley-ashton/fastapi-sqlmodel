@@ -1,6 +1,9 @@
+import time
+
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from sqlmodel.ext.asyncio.session import AsyncSession
+from fastapi.concurrency import run_in_threadpool
 
 from .auth import User, create_access_token, authenticate_user, \
     get_current_user, AccessParams
@@ -75,3 +78,17 @@ async def add_song(
     song = Song(**song.dict())
     song = await create(song, access)
     return song
+
+
+def _long_task(access: AccessParams):
+    """A dummy task to demonstrate background tasks"""
+    print(f"BACKGROUND TASK STARTED for user id: {access.token}")
+    time.sleep(3)
+    print(f"BACKGROUND TASK DONE: for user id: {access.token}")
+    return "You're welcome"
+
+
+@app.get("/background-task")
+async def background_task(access: AccessParams = Depends(get_access)):
+    res = await run_in_threadpool(_long_task, access)
+    return res
