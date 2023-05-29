@@ -1,6 +1,6 @@
-# Multi-Tenant FastAPI + SQLModel + React
+# Multi-Tenant FastAPI + SQLModel
 
-Sample FastAPI project that uses async SQLAlchemy, SQLModel, React,
+Sample FastAPI project that uses async SQLAlchemy, SQLModel,
 Postgres, Alembic, and Docker.
 
 There is two development modes:
@@ -186,7 +186,6 @@ res = await run_in_threadpool(cpu_bound_task, contents)
 https://stackoverflow.com/questions/71516140/
 
 https://www.anyscale.com/blog/serving-pytorch-models-with-fastapi-and-ray-serve
-
 
 ### Secrets in files, not environment variables
 
